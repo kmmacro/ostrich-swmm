@@ -40,7 +40,7 @@ def perform_node_extraction(
             is considered to have flow. Defaults to 0.
     """
     # Get the indicies of the relevant data in the binary output.
-    node_type = binary_output.TypeCheck('node')
+    node_type = binary_output.type_check('node')
     node_total_inflow_variable_index = next(
         index
         for index, name
@@ -64,10 +64,10 @@ def perform_node_extraction(
     previous_time = binary_output.startdate
     report_interval_seconds = binary_output.reportinterval.total_seconds()
     nodes_current_values = np.zeros(num_nodes, np.float64)
-    for period in range(binary_output.nperiods):
+    for period in range(binary_output.swmm_nperiods):
         # Get this period's values for each node.
         for node_index, node_name in enumerate(node_names):
-            swmm_timestamp, value = binary_output.GetSwmmResults(
+            swmm_timestamp, value = binary_output.get_swmm_results(
                 node_type,
                 node_name,
                 node_total_inflow_variable_index,
@@ -303,7 +303,6 @@ def perform_extraction_steps(config, validate=True):
     binary_output = swmmtoolbox.SwmmExtract(
         config['binary_output_path']
     )
-
     for step in config['extract']['steps']:
         # If step has been explicitly disabled, skip it.
         step_enabled = step.get('enabled', True)
